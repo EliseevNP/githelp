@@ -31,6 +31,8 @@ Options:
 
 ### clone
 
+> You need add ssh key in your gitlab account for using this command
+
 ```sh
 $ githelp clone --help
 ```
@@ -57,8 +59,6 @@ Options:
   -v, --verbose       Show details about the result of running command  [boolean] [default: false]
   -h, --help          Show help  [boolean]
  ```
- 
- > You need add ssh key in your gitlab account for using this command
 
 ## License
 
