@@ -91,7 +91,13 @@ module.exports.builder = (yargs) => {
       default: false,
       alias: 'verbose',
       description: 'Show details about the result of running command',
-    });
+    })
+    .option('visibility', {
+      type: 'string',
+      default: 'private',
+      choices: ['public', 'internal', 'private'],
+      description: 'Visibility level (now provide only gitlab visibility levels: public, internal or private)',
+    })
 };
 
 module.exports.handler = async (argv) => {
@@ -99,9 +105,9 @@ module.exports.handler = async (argv) => {
     let url = argv.api_url;
 
     if (argv.group) {
-      url += `/groups/${argv.group}/projects?access_token=${argv.access_token}&simple=true`;
+      url += `/groups/${argv.group}/projects?access_token=${argv.access_token}&visibility=${argv.visibility}&simple=true`;
     } else {
-      url += `/projects?access_token=${argv.access_token}&simple=true`;
+      url += `/projects?access_token=${argv.access_token}&visibility=${argv.visibility}&simple=true`;
     }
 
     let repositories = [];

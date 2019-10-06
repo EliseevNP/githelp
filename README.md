@@ -18,7 +18,7 @@ Help output:
 githelp <command>
 
 Commands:
-  cli.js clone  Clone all repositories available to you by access token into output directory
+  githelp clone  Clone all repositories available to you by access token into output directory
 
 Options:
   --version   Show version number  [boolean]
@@ -57,6 +57,7 @@ Options:
   -a, --all           Clone all available repositories ('page' and 'per_page' options will be ignored)  [boolean] [default: false]
   -f, --force         Folders located in the output directory and having the same names as the cloned repositories will be deleted before cloning  [boolean] [default: false]
   -v, --verbose       Show details about the result of running command  [boolean] [default: false]
+  --visibility        Visibility level (now provide only gitlab visibility levels: public, internal or private)  [string] [choices: "public", "internal", "private"] [default: "private"]
   -h, --help          Show help  [boolean]
  ```
 
