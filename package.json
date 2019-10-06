@@ -1,0 +1,36 @@
+{
+  "name": "githelp",
+  "version": "1.0.0",
+  "description": "CLI for performing routine operations with git",
+  "main": "src/cli.js",
+  "author": "Nikita Eliseev",
+  "license": "MIT",
+  "bin": {
+    "githelp": "./src/cli.js"
+  },
+  "scripts": {
+    "eslint": "eslint ./ --fix"
+  },
+  "keywords": [
+    "git",
+    "cli"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EliseevNP/githelp.git"
+  },
+  "homepage": "https://github.com/EliseevNP/githelp",
+  "bugs": {
+    "url": "https://github.com/EliseevNP/githelp/issues"
+  },
+  "dependencies": {
+    "axios": "^0.19.0",
+    "yargs": "^14.0.0"
+  },
+  "devDependencies": {
+    "@bifot/eslint-config": "^1.0.2",
+    "eslint": "^6.5.1",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.18.2"
+  }
+}
