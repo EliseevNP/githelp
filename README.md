@@ -31,7 +31,7 @@ Options:
 
 ### clone
 
-> You need add ssh key in your gitlab account for using this command
+> You need to add the ssh key to your gitlab account to use this command
 
 ```sh
 $ githelp clone --help
