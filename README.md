@@ -54,6 +54,7 @@ Options:
   -p, --page          Page number  [number] [default: 1]
   --per_page          Number of items to list per page  [number] [default: 20]
   -g, --group         Clone only repositories of the specified group  [string]
+  -u, --user          Clone only repositories of the specified user  [string]
   -a, --all           Clone all available repositories ('page' and 'per_page' options will be ignored)  [boolean] [default: false]
   -f, --force         Folders located in the output directory and having the same names as the cloned repositories will be deleted before cloning  [boolean] [default: false]
   -v, --verbose       Show details about the result of running command  [boolean] [default: false]

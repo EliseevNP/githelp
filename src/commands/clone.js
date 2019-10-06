@@ -74,6 +74,11 @@ module.exports.builder = (yargs) => {
       alias: 'group',
       description: 'Clone only repositories of the specified group',
     })
+    .option('u', {
+      type: 'string',
+      alias: 'user',
+      description: 'Clone only repositories of the specified user',
+    })
     .option('a', {
       type: 'boolean',
       default: false,
@@ -97,17 +102,23 @@ module.exports.builder = (yargs) => {
       default: 'private',
       choices: ['public', 'internal', 'private'],
       description: 'Visibility level (now provide only gitlab visibility levels: public, internal or private)',
-    })
+    });
 };
 
 module.exports.handler = async (argv) => {
   try {
-    let url = argv.api_url;
+    const urls = [];
 
     if (argv.group) {
-      url += `/groups/${argv.group}/projects?access_token=${argv.access_token}&visibility=${argv.visibility}&simple=true`;
-    } else {
-      url += `/projects?access_token=${argv.access_token}&visibility=${argv.visibility}&simple=true`;
+      urls.push(`${argv.api_url}/groups/${argv.group}/projects?access_token=${argv.access_token}&visibility=${argv.visibility}&simple=true`);
+    }
+
+    if (argv.user) {
+      urls.push(`${argv.api_url}/users/${argv.user}/projects?access_token=${argv.access_token}&visibility=${argv.visibility}&simple=true`);
+    }
+
+    if (!argv.group && !argv.user) {
+      urls.push(`${argv.api_url}/projects?access_token=${argv.access_token}&visibility=${argv.visibility}&simple=true`);
     }
 
     let repositories = [];
@@ -122,31 +133,37 @@ module.exports.handler = async (argv) => {
     try {
       console.log('Getting list of available repositories ...');
 
-      if (argv.all) {
-        const per_page = 100;
-        let page = 1;
+      const getRepositositoriesList = async (baseURL) => {
+        let url = baseURL;
 
-        url += `&page=${page}&per_page=${per_page}`;
+        if (argv.all) {
+          const per_page = 100;
+          let page = 1;
 
-        do {
+          url += `&page=${page}&per_page=${per_page}`;
+
+          do {
+            response = await axios.get(url, { validateStatus });
+            repositories = repositories.concat(response.data.map(mapRepositories));
+            url = url.replace(`&page=${page}`, `&page=${++page}`);
+          } while (response.data.length !== 0);
+        } else {
+          if (argv.page) {
+            url += `&page=${argv.page}`;
+          }
+
+          if (argv.per_page) {
+            url += `&per_page=${argv.per_page}`;
+          }
+
           response = await axios.get(url, { validateStatus });
           repositories = repositories.concat(response.data.map(mapRepositories));
-          url = url.replace(`&page=${page}`, `&page=${++page}`);
-        } while (response.data.length !== 0);
-      } else {
-        if (argv.page) {
-          url += `&page=${argv.page}`;
         }
+      };
 
-        if (argv.per_page) {
-          url += `&per_page=${argv.per_page}`;
-        }
-
-        response = await axios.get(url, { validateStatus });
-        repositories = response.data.map(mapRepositories);
-      }
+      await Promise.all(urls.map(getRepositositoriesList));
     } catch (err) {
-      throw new Error(`An error occurred while trying to get a list of repositories.${(argv.verbose ? `\n  ${err}\n  Request url: ${url}` : '')}`);
+      throw new Error(`An error occurred while trying to get a list of repositories.${(argv.verbose ? `\n  ${err}` : '')}`);
     }
 
     console.log(`Cloning repositories to the '${argv.output}' directory ...`);
@@ -170,7 +187,7 @@ module.exports.handler = async (argv) => {
           await exec(`rm -r ${repository.output}`);
           cloneRepository();
         } else {
-          console.log(`Skip cloning '${repository.path}' repository.${(argv.verbose) ? `\n  Directory '${repository.output}' already exists.\n  Use -f (--force) option to enable deliting '${repository.output}' directory before cloning`: ''}`);
+          console.log(`Skip cloning '${repository.path}' repository.${(argv.verbose) ? `\n  Directory '${repository.output}' already exists.\n  Use -f (--force) option to enable deliting '${repository.output}' directory before cloning` : ''}`);
           resolve();
         }
       } else {
