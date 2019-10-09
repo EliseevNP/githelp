@@ -5,14 +5,14 @@ module.exports.command = 'checkout <branch>';
 
 module.exports.description = 'Switch branches in all repositories located in the source directory';
 
-module.exports.builder = (yargs) => {
+module.exports.builder = yargs => {
   yargs
     .option('s', {
       type: 'string',
       default: '.',
       alias: 'source',
       description: 'The directory where the repositories are located in which to switch branches',
-      coerce: (arg) => ((arg[arg.length - 1] === '/') ? arg.slice(0, -1) : arg),
+      coerce: arg => ((arg[arg.length - 1] === '/') ? arg.slice(0, -1) : arg),
     })
     .option('b', {
       type: 'boolean',
@@ -27,7 +27,7 @@ module.exports.builder = (yargs) => {
     });
 };
 
-module.exports.handler = async (argv) => {
+module.exports.handler = async argv => {
   try {
     let repositories;
 
@@ -37,11 +37,11 @@ module.exports.handler = async (argv) => {
       throw new Error(`An error occurred while trying to get a list of repositories.${(argv.verbose ? `\n  ${err}` : '')}`);
     }
 
-    await Promise.all(repositories.map((repository) => new Promise(async (resolve) => {
+    await Promise.all(repositories.map(repository => new Promise(async resolve => {
       try {
         let branches = (await exec(`cd ${repository} && git branch --list`)).stdout.slice(0, -1).split('\n');
 
-        branches = branches.map((branch) => branch.slice(2));
+        branches = branches.map(branch => branch.slice(2));
 
         const currentBranch = (await exec(`cd ${repository} && git branch --show-current`)).stdout.slice(0, -1);
 

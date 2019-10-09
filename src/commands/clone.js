@@ -6,7 +6,7 @@ module.exports.command = 'clone';
 
 module.exports.description = 'Clone all repositories available to you by access token into output directory';
 
-module.exports.builder = (yargs) => {
+module.exports.builder = yargs => {
   yargs
     .option('t', {
       type: 'string',
@@ -19,13 +19,13 @@ module.exports.builder = (yargs) => {
       default: './output',
       alias: 'output',
       description: 'Output directory',
-      coerce: (arg) => ((arg[arg.length - 1] === '/') ? arg.slice(0, -1) : arg),
+      coerce: arg => ((arg[arg.length - 1] === '/') ? arg.slice(0, -1) : arg),
     })
     .option('api_url', {
       type: 'string',
       default: 'https://gitlab.com/api/v4',
       description: 'API URL (now provide only gitlab API). Examples of correct API URL\'s:\n  - https://gitlab.com/api/v4\n  - https://gitlab.example.xyz/api/v4\n  - gitlab.com \n  - gitlab.example.xyz',
-      coerce: (arg) => {
+      coerce: arg => {
         if (arg.match(/https:\/\/gitlab\.([\x00-\x7F]*)\/api\/v4/)) { // [\x00-\x7F] - ASCII symbols
           return arg;
         }
@@ -38,7 +38,7 @@ module.exports.builder = (yargs) => {
       default: 1,
       alias: 'page',
       description: 'Page number',
-      coerce: (arg) => {
+      coerce: arg => {
         const error = 'Invalid argument: p\n';
 
         if (isNaN(arg)) {
@@ -55,7 +55,7 @@ module.exports.builder = (yargs) => {
       type: 'number',
       default: 20,
       description: 'Number of items to list per page',
-      coerce: (arg) => {
+      coerce: arg => {
         const error = 'Invalid argument: per_page\n';
 
         if (isNaN(arg)) {
@@ -104,7 +104,7 @@ module.exports.builder = (yargs) => {
     });
 };
 
-module.exports.handler = async (argv) => {
+module.exports.handler = async argv => {
   try {
     const urls = [];
 
@@ -122,8 +122,8 @@ module.exports.handler = async (argv) => {
 
     let repositories = [];
     let response;
-    const validateStatus = (status) => status === 200;
-    const mapRepositories = (repositoryInfo) => ({
+    const validateStatus = status => status === 200;
+    const mapRepositories = repositoryInfo => ({
       url: repositoryInfo.ssh_url_to_repo,
       output: `${argv.output}/${repositoryInfo.path_with_namespace}`,
       path: repositoryInfo.path_with_namespace,
@@ -132,7 +132,7 @@ module.exports.handler = async (argv) => {
     try {
       console.log('Getting list of available repositories ...');
 
-      const getRepositositoriesList = async (baseURL) => {
+      const getRepositositoriesList = async baseURL => {
         let url = baseURL;
 
         if (argv.all) {
@@ -167,7 +167,7 @@ module.exports.handler = async (argv) => {
 
     console.log(`Cloning repositories to the '${argv.output}' directory ...`);
 
-    await Promise.all(repositories.map((repository) => new Promise(async (resolve) => {
+    await Promise.all(repositories.map(repository => new Promise(async resolve => {
       const cloneRepository = async () => {
         try {
           await exec(`git clone ${repository.url} ${repository.output}`);
