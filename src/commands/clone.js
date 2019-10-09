@@ -1,7 +1,6 @@
 const yargs = require('yargs');
 const axios = require('axios');
-const util = require('util');
-const exec = util.promisify(require('child_process').exec);
+const exec = require('../helpers/exec');
 
 module.exports.command = 'clone';
 
@@ -163,7 +162,7 @@ module.exports.handler = async (argv) => {
 
       await Promise.all(urls.map(getRepositositoriesList));
     } catch (err) {
-      throw new Error(`An error occurred while trying to get a list of repositories.${(argv.verbose ? `\n  ${err}` : '')}`);
+      throw new Error(`[ERROR] An error occurred while trying to get a list of repositories.${(argv.verbose ? `\n  ${err}` : '')}`);
     }
 
     console.log(`Cloning repositories to the '${argv.output}' directory ...`);
@@ -172,10 +171,10 @@ module.exports.handler = async (argv) => {
       const cloneRepository = async () => {
         try {
           await exec(`git clone ${repository.url} ${repository.output}`);
-          console.log(`Cloning '${repository.path}' repository ... ok`);
+          console.log(`[OK] Cloning '${repository.path}' repository ... ok`);
           resolve();
         } catch (err) {
-          console.log(`Cloning '${repository.path}' repository failure.${(argv.verbose) ? ` Exit code ${err.code}.\n${err.message}` : ''}`);
+          console.log(`[ERROR] Cloning '${repository.path}' repository failure.${(argv.verbose) ? ` Exit code ${err.code}.\n${err.message}` : ''}`);
           resolve();
         }
       };
@@ -187,7 +186,7 @@ module.exports.handler = async (argv) => {
           await exec(`rm -r ${repository.output}`);
           cloneRepository();
         } else {
-          console.log(`Skip cloning '${repository.path}' repository.${(argv.verbose) ? `\n  Directory '${repository.output}' already exists.\n  Use -f (--force) option to enable deliting '${repository.output}' directory before cloning` : ''}`);
+          console.log(`[WARNING] Skip cloning '${repository.path}' repository.${(argv.verbose) ? `\n  Directory '${repository.output}' already exists.\n  Use -f (--force) option to enable deliting '${repository.output}' directory before cloning` : ''}`);
           resolve();
         }
       } else {
