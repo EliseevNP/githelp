@@ -2,6 +2,7 @@ const yargs = require('yargs');
 const exec = require('../helpers/exec');
 const getRepositories = require('../helpers/getRepositories');
 const handleErrorVerbose = require('../helpers/handleErrorVerbose');
+const getBranches = require('../helpers/getBranches');
 
 module.exports.command = 'checkout <branch>';
 
@@ -35,7 +36,7 @@ module.exports.handler = async argv => {
 
     await Promise.all(repositories.map(repository => new Promise(async resolve => {
       try {
-        let branches = (await exec(`cd ${repository} && git branch --list`)).stdout.slice(0, -1).split('\n');
+        let branches = await getBranches(repository);
 
         branches = branches.map(branch => branch.slice(2));
 
