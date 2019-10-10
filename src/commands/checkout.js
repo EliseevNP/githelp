@@ -1,5 +1,6 @@
 const yargs = require('yargs');
 const exec = require('../helpers/exec');
+const getRepositories = require('../helpers/getRepositories');
 
 module.exports.command = 'checkout <branch>';
 
@@ -29,13 +30,7 @@ module.exports.builder = yargs => {
 
 module.exports.handler = async argv => {
   try {
-    let repositories;
-
-    try {
-      repositories = (await exec(`ls -dm ${argv.source}/*/`)).stdout.slice(0, -1).split(', \n');
-    } catch (err) {
-      throw new Error(`An error occurred while trying to get a list of repositories.${(argv.verbose ? `\n  ${err}` : '')}`);
-    }
+    const repositories = await getRepositories(argv.source, argv.verbose);
 
     await Promise.all(repositories.map(repository => new Promise(async resolve => {
       try {
@@ -46,7 +41,7 @@ module.exports.handler = async argv => {
         const currentBranch = (await exec(`cd ${repository} && git branch --show-current`)).stdout.slice(0, -1);
 
         if (currentBranch === argv.branch) {
-          console.log(`[OK] Skiping checkout for '${repository}'. Already on '${argv.branch}'.`);
+          console.log(`[OK] Skiping checkout for '${repository}' repository. Already on '${argv.branch}'.`);
           resolve();
 
           return;
@@ -55,7 +50,7 @@ module.exports.handler = async argv => {
         const isBranchExists = branches.includes(argv.branch);
 
         if (!isBranchExists && !argv.b) {
-          console.log(`[ERROR] Checkout for '${repository}' failure. Branch '${argv.branch}' doesn't exists (maybe you need -b option?)`);
+          console.log(`[ERROR] Checkout for '${repository}' repository failure. Branch '${argv.branch}' doesn't exists (maybe you need -b option?)`);
           resolve();
 
           return;
@@ -67,10 +62,10 @@ module.exports.handler = async argv => {
           await exec(`cd ${repository} && git checkout ${argv.branch}`);
         }
 
-        console.log(`[OK] Checkout for '${repository}' ... ok`);
+        console.log(`[OK] Checkout for '${repository}' repository ... ok`);
         resolve();
       } catch (err) {
-        console.log(`[ERROR] Checkout for '${repository}' failure.${(argv.verbose) ? `\n${err}` : ''}`);
+        console.log(`[ERROR] Checkout for '${repository}' repository failure.${(argv.verbose) ? `\n${err}` : ''}`);
         resolve();
       }
     })));
