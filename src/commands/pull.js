@@ -1,6 +1,7 @@
 const yargs = require('yargs');
 const exec = require('../helpers/exec');
 const getRepositories = require('../helpers/getRepositories');
+const handleErrorVerbose = require('../helpers/handleErrorVerbose');
 
 module.exports.command = 'pull';
 
@@ -34,12 +35,15 @@ module.exports.handler = async argv => {
         const { stdout, stderr } = (await exec(`cd ${repositories[i]} && git pull`));
 
         if (stderr) {
-          console.log(`[ERROR] Pulling for '${repositories[i]}' repository failure.${(argv.verbose) ? `\n${stderr}` : ''}`);
+          console.log(`[ERROR] Pulling for '${repositories[i]}' repository failure${(argv.verbose) ? `\n${stderr}` : ''}`);
         } else {
-          console.log(`[OK] Pulling for '${repositories[i]}' repository ... ok.${(argv.verbose) ? `\n${stdout}` : ''}`);
+          console.log(`[OK] Pulling for '${repositories[i]}' repository ... ok${(argv.verbose) ? `\n${stdout}` : ''}`);
         }
       } catch (err) {
-        console.log(`[ERROR] Pulling for '${repositories[i]}' repository failure.${(argv.verbose) ? `\n${err}` : ''}`);
+        console.log(`[ERROR] Pulling for '${repositories[i]}' repository failure`);
+        if (argv.verbose) {
+          handleErrorVerbose(err);
+        }
       }
     }
   } catch (err) {

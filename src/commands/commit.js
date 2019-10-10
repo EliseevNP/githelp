@@ -3,9 +3,9 @@ const exec = require('../helpers/exec');
 const getRepositories = require('../helpers/getRepositories');
 const handleErrorVerbose = require('../helpers/handleErrorVerbose');
 
-module.exports.command = 'add';
+module.exports.command = 'commit';
 
-module.exports.description = 'Add changes to the index in all repositories located in the source directory';
+module.exports.description = 'Commit changes to the index in all repositories located in the source directory';
 
 module.exports.builder = yargs => {
   yargs
@@ -13,8 +13,14 @@ module.exports.builder = yargs => {
       type: 'string',
       default: '.',
       alias: 'source',
-      description: 'The directory where the repositories are located in which you want to add changes to the index',
+      description: 'The directory where the repositories are located in which you want to commit changes',
       coerce: arg => ((arg[arg.length - 1] === '/') ? arg.slice(0, -1) : arg),
+    })
+    .option('m', {
+      type: 'string',
+      demandOption: 'You need specify commit message (-m, --message)',
+      alias: 'message',
+      description: 'Commit message',
     })
     .option('v', {
       type: 'boolean',
@@ -30,15 +36,15 @@ module.exports.handler = async argv => {
 
     await Promise.all(repositories.map(repository => new Promise(async resolve => {
       try {
-        const { stdout, stderr } = (await exec(`cd ${repository} && git add .`));
+        const { stdout, stderr } = (await exec(`cd ${repository} && git commit -m "${argv.message}"`));
 
         if (stderr) {
-          console.log(`[ERROR] Adding changes for '${repository}' repository failure${(argv.verbose) ? `\n${stderr}` : ''}`);
+          console.log(`[ERROR] Commiting changes for '${repository}' repository failure${(argv.verbose) ? `\n${stderr}` : ''}`);
         } else {
-          console.log(`[OK] Adding changes for '${repository}' repository ... ok${(argv.verbose) ? `\n${stdout}` : ''}`);
+          console.log(`[OK] Commiting changes for '${repository}' repository ... ok${(argv.verbose) ? `\n${stdout}` : ''}`);
         }
       } catch (err) {
-        console.log(`[ERROR] Adding changes for '${repository}' repository failure`);
+        console.log(`[ERROR] Commiting changes for '${repository}' repository failure`);
         if (argv.verbose) {
           handleErrorVerbose(err);
         }
