@@ -1,6 +1,7 @@
 const yargs = require('yargs');
 const exec = require('../helpers/exec');
 const getRepositories = require('../helpers/getRepositories');
+const handleErrorVerbose = require('../helpers/handleErrorVerbose');
 
 module.exports.command = 'checkout <branch>';
 
@@ -41,7 +42,7 @@ module.exports.handler = async argv => {
         const currentBranch = (await exec(`cd ${repository} && git branch --show-current`)).stdout.slice(0, -1);
 
         if (currentBranch === argv.branch) {
-          console.log(`[OK] Skiping checkout for '${repository}' repository. Already on '${argv.branch}'.`);
+          console.log(`[OK] Skiping checkout for '${repository}' repository. Already on '${argv.branch}'`);
           resolve();
 
           return;
@@ -65,7 +66,10 @@ module.exports.handler = async argv => {
         console.log(`[OK] Checkout for '${repository}' repository ... ok`);
         resolve();
       } catch (err) {
-        console.log(`[ERROR] Checkout for '${repository}' repository failure.${(argv.verbose) ? `\n${err}` : ''}`);
+        console.log(`[ERROR] Checkout for '${repository}' repository failure`);
+        if (argv.verbose) {
+          handleErrorVerbose(err);
+        }
         resolve();
       }
     })));

@@ -13,7 +13,9 @@ $ npm i githelp -g
 ```sh
 $ githelp --help
 ```
+
 Help output:
+
 ```
 githelp <command>
 
@@ -21,6 +23,7 @@ Commands:
   githelp add                Add changes to the index in all repositories located in the source directory
   githelp checkout <branch>  Switch branches in all repositories located in the source directory
   githelp clone              Clone all repositories available to you by access token into output directory
+  githelp commit             Commit changes to the index in all repositories located in the source directory
   githelp pull               For all repositories located in the source directory changes from their remote repositories will be pulled
 
 Options:
@@ -33,6 +36,7 @@ Options:
 * [add](#add)
 * [checkout](#checkout)
 * [clone](#clone)
+* [commit](#commit)
 * [pull](#pull)
 
 ### add
@@ -83,7 +87,9 @@ Options:
 ```sh
 $ githelp clone --help
 ```
+
 Help output:
+
 ```
 githelp clone
 
@@ -107,7 +113,28 @@ Options:
   -v, --verbose       Show details about the result of running command  [boolean] [default: false]
   --visibility        Visibility level (now provide only gitlab visibility levels: public, internal or private)  [string] [choices: "public", "internal", "private"] [default: "private"]
   -h, --help          Show help  [boolean]
- ```
+```
+
+### commit
+
+```sh
+$ githelp commit --help
+```
+
+Help output:
+
+```
+githelp commit
+
+Commit changes to the index in all repositories located in the source directory
+
+Options:
+  --version      Show version number  [boolean]
+  -s, --source   The directory where the repositories are located in which you want to commit changes  [string] [default: "."]
+  -m, --message  Commit message  [string] [required]
+  -v, --verbose  Show details about the result of running command  [boolean] [default: false]
+  -h, --help     Show help  [boolean]
+```
 
  ### pull
 
