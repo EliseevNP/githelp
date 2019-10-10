@@ -3,6 +3,7 @@ const exec = require('../helpers/exec');
 const getRepositories = require('../helpers/getRepositories');
 const handleErrorVerbose = require('../helpers/handleErrorVerbose');
 const getBranches = require('../helpers/getBranches');
+const getCurrentBranch = require('../helpers/getCurrentBranch');
 
 module.exports.command = 'checkout <branch>';
 
@@ -36,8 +37,7 @@ module.exports.handler = async argv => {
 
     await Promise.all(repositories.map(repository => new Promise(async resolve => {
       try {
-        // eslint-disable-next-line no-useless-escape
-        const currentBranch = (await exec(`cd ${repository} && git branch | grep \* | cut -d ' ' -f2`)).stdout.slice(0, -1);
+        const currentBranch = await getCurrentBranch(repository);
 
         if (currentBranch === argv.branch) {
           console.log(`[OK] Skiping checkout for '${repository}' repository. Already on '${argv.branch}'`);

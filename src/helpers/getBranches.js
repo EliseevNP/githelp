@@ -1,5 +1,6 @@
 const exec = require('./exec');
 
+// Returns an array containing the names of all branches (local and remote)
 module.exports = async repository => {
   const branches = (await exec(`cd ${repository} && git branch -a`))
     .stdout

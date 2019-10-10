@@ -10,5 +10,6 @@ module.exports = {
     'no-await-in-loop': 'off',
     "no-control-regex": 'off',
     'arrow-parens': ['error', 'as-needed'],
+    'max-len': 'off',
   },
 };

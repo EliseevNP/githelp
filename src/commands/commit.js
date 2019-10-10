@@ -2,6 +2,7 @@ const yargs = require('yargs');
 const exec = require('../helpers/exec');
 const getRepositories = require('../helpers/getRepositories');
 const handleErrorVerbose = require('../helpers/handleErrorVerbose');
+const getCommitChangesCount = require('../helpers/getCommitChangesCount');
 
 module.exports.command = 'commit';
 
@@ -36,6 +37,13 @@ module.exports.handler = async argv => {
 
     await Promise.all(repositories.map(repository => new Promise(async resolve => {
       try {
+        if (await getCommitChangesCount(repository) === 0) {
+          console.log(`[OK] Skiping commiting changes for '${repository}' repository. Files added to current commit not found`);
+          resolve();
+
+          return;
+        }
+
         const { stdout, stderr } = (await exec(`cd ${repository} && git commit -m "${argv.message}" --quiet`));
 
         if (stderr) {
@@ -43,6 +51,8 @@ module.exports.handler = async argv => {
         } else {
           console.log(`[OK] Commiting changes for '${repository}' repository ... ok${(argv.verbose) ? `\n${stdout}` : ''}`);
         }
+
+        resolve();
       } catch (err) {
         console.log(`[ERROR] Commiting changes for '${repository}' repository failure`);
         if (argv.verbose) {

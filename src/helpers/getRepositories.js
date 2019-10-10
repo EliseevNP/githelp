@@ -1,6 +1,7 @@
 const exec = require('./exec');
 
-module.exports = async (source, verbose = false) => {
+// Returns an array containing the paths to the repositories relative to the source directory
+module.exports = async (source, verbose) => {
   try {
     return (await exec(`ls -d ${source}/*/`)).stdout.slice(0, -1).split('\n');
   } catch (err) {

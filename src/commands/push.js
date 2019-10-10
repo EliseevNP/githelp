@@ -2,6 +2,7 @@ const yargs = require('yargs');
 const exec = require('../helpers/exec');
 const getRepositories = require('../helpers/getRepositories');
 const handleErrorVerbose = require('../helpers/handleErrorVerbose');
+const getCurrentBranch = require('../helpers/getCurrentBranch');
 
 module.exports.command = 'push';
 
@@ -32,12 +33,14 @@ module.exports.handler = async argv => {
       try {
         console.log(`[INFO] Pushing for '${repositories[i]}' repository ...`);
 
-        const currentBranch = (await exec(`cd ${repositories[i]} && git branch --show-current`)).stdout.slice(0, -1);
+        const currentBranch = await getCurrentBranch(repositories[i]);
 
-        let { stdout, stderr } = (await exec(`cd ${repositories[i]} && git push origin ${currentBranch} --quiet`));
+        const { stdout, stderr } = (await exec(`cd ${repositories[i]} && git push origin ${currentBranch} --quiet`));
+
+        // TODO: Перенаправить поток вывода от remote из stderr в stdout (этот вывод возникает если пушить новую локальную ветку в удаленный репозиторий)
 
         // exclude lines stats with 'remote:' from stderr
-        stderr = stderr.split('\n').slice(0, -1).filter(logString => !logString.startsWith('remote:')).join('\n');
+        // stderr = stderr.split('\n').slice(0, -1).filter(logString => !logString.startsWith('remote:')).join('\n');
 
         if (stderr) {
           console.log(`[ERROR] Pushing for '${repositories[i]}' repository failure${(argv.verbose) ? `\n${stderr}` : ''}`);
