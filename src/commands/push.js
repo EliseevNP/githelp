@@ -32,7 +32,12 @@ module.exports.handler = async argv => {
       try {
         console.log(`[INFO] Pushing for '${repositories[i]}' repository ...`);
 
-        const { stdout, stderr } = (await exec(`cd ${repositories[i]} && git push --quiet`));
+        const currentBranch = (await exec(`cd ${repositories[i]} && git branch --show-current`)).stdout.slice(0, -1);
+
+        let { stdout, stderr } = (await exec(`cd ${repositories[i]} && git push origin ${currentBranch} --quiet`));
+
+        // exclude lines stats with 'remote:' from stderr
+        stderr = stderr.split('\n').slice(0, -1).filter((logString) => { return !logString.startsWith('remote:')}).join('\n');
 
         if (stderr) {
           console.log(`[ERROR] Pushing for '${repositories[i]}' repository failure${(argv.verbose) ? `\n${stderr}` : ''}`);
