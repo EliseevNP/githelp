@@ -59,6 +59,7 @@ module.exports.handler = async argv => {
 
         if (!isBranchExists && argv.b) {
           await exec(`cd ${repository} && git checkout -b ${argv.branch}`);
+          await exec(`cd ${repository} && git branch --set-upstream-to=origin/${argv.branch} ${argv.branch}`);
         } else {
           await exec(`cd ${repository} && git checkout ${argv.branch}`);
         }
