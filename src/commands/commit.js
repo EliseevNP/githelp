@@ -36,7 +36,7 @@ module.exports.handler = async argv => {
 
     await Promise.all(repositories.map(repository => new Promise(async resolve => {
       try {
-        const { stdout, stderr } = (await exec(`cd ${repository} && git commit -m "${argv.message}"`));
+        const { stdout, stderr } = (await exec(`cd ${repository} && git commit -m "${argv.message}" --quiet`));
 
         if (stderr) {
           console.log(`[ERROR] Commiting changes for '${repository}' repository failure${(argv.verbose) ? `\n${stderr}` : ''}`);
