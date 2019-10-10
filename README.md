@@ -18,7 +18,8 @@ Help output:
 githelp <command>
 
 Commands:
-  githelp clone  Clone all repositories available to you by access token into output directory
+  githelp checkout <branch>  Switch branches in all repositories located in the source directory
+  githelp clone              Clone all repositories available to you by access token into output directory
 
 Options:
   --version   Show version number  [boolean]
@@ -27,7 +28,29 @@ Options:
 
 ## Available commands
 
+* [checkout](#checkout)
 * [clone](#clone)
+
+### checkout
+
+```sh
+$ githelp checkout --help
+```
+
+Help output
+
+```
+githelp checkout <branch>
+
+Switch branches in all repositories located in the source directory
+
+Options:
+  --version      Show version number  [boolean]
+  -s, --source   The directory where the repositories are located in which to switch branches  [string] [default: "."]
+  -b             Apply -b flag to the 'git checkout' command if specified <branch> is not exists  [boolean] [default: false]
+  -v, --verbose  Show details about the result of running command  [boolean] [default: false]
+  -h, --help     Show help  [boolean]
+```
 
 ### clone
 
