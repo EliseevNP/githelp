@@ -39,6 +39,7 @@ Options:
 * [clone](#clone)
 * [commit](#commit)
 * [pull](#pull)
+* [push](#push)
 
 ### add
 
