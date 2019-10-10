@@ -36,11 +36,8 @@ module.exports.handler = async argv => {
 
     await Promise.all(repositories.map(repository => new Promise(async resolve => {
       try {
-        let branches = await getBranches(repository);
-
-        branches = branches.map(branch => branch.slice(2));
-
-        const currentBranch = (await exec(`cd ${repository} && git branch --show-current`)).stdout.slice(0, -1);
+        // eslint-disable-next-line no-useless-escape
+        const currentBranch = (await exec(`cd ${repository} && git branch | grep \* | cut -d ' ' -f2`)).stdout.slice(0, -1);
 
         if (currentBranch === argv.branch) {
           console.log(`[OK] Skiping checkout for '${repository}' repository. Already on '${argv.branch}'`);
@@ -49,7 +46,7 @@ module.exports.handler = async argv => {
           return;
         }
 
-        const isBranchExists = branches.includes(argv.branch);
+        const isBranchExists = (await getBranches(repository)).includes(argv.branch);
 
         if (!isBranchExists && !argv.b) {
           console.log(`[ERROR] Checkout for '${repository}' repository failure. Branch '${argv.branch}' doesn't exists (maybe you need -b option?)`);
@@ -60,11 +57,12 @@ module.exports.handler = async argv => {
 
         if (!isBranchExists && argv.b) {
           await exec(`cd ${repository} && git checkout -b ${argv.branch}`);
+          console.log(`[OK] Checkout for '${repository}' repository ... ok (new branch '${argv.branch}' was created)`);
         } else {
           await exec(`cd ${repository} && git checkout ${argv.branch}`);
+          console.log(`[OK] Checkout for '${repository}' repository ... ok`);
         }
 
-        console.log(`[OK] Checkout for '${repository}' repository ... ok`);
         resolve();
       } catch (err) {
         console.log(`[ERROR] Checkout for '${repository}' repository failure`);

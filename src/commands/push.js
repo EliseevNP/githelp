@@ -37,7 +37,7 @@ module.exports.handler = async argv => {
         let { stdout, stderr } = (await exec(`cd ${repositories[i]} && git push origin ${currentBranch} --quiet`));
 
         // exclude lines stats with 'remote:' from stderr
-        stderr = stderr.split('\n').slice(0, -1).filter((logString) => { return !logString.startsWith('remote:')}).join('\n');
+        stderr = stderr.split('\n').slice(0, -1).filter(logString => !logString.startsWith('remote:')).join('\n');
 
         if (stderr) {
           console.log(`[ERROR] Pushing for '${repositories[i]}' repository failure${(argv.verbose) ? `\n${stderr}` : ''}`);
