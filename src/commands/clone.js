@@ -176,7 +176,7 @@ module.exports.handler = async argv => {
     await Promise.all(repositories.map(repository => new Promise(async resolve => {
       const cloneRepository = async () => {
         try {
-          await exec(`git clone ${repository.url} ${repository.output}`);
+          await exec(`git clone ${repository.url} ${repository.output} --quiet`);
           console.log(`[OK] Cloning '${repository.path}' repository ... ok`);
           resolve();
         } catch (err) {

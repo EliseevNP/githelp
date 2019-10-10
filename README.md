@@ -25,6 +25,7 @@ Commands:
   githelp clone              Clone all repositories available to you by access token into output directory
   githelp commit             Commit changes to the index in all repositories located in the source directory
   githelp pull               For all repositories located in the source directory changes from their remote repositories will be pulled
+  githelp push               For all repositories located in the source directory push commited changes to appropriate remote repositories
 
 Options:
   --version   Show version number  [boolean]
@@ -136,7 +137,7 @@ Options:
   -h, --help     Show help  [boolean]
 ```
 
- ### pull
+### pull
 
 ```sh
 $ githelp pull --help
@@ -152,6 +153,26 @@ For all repositories located in the source directory changes from their remote r
 Options:
   --version      Show version number  [boolean]
   -s, --source   The directory where the repositories for which you want to pull changes are located  [string] [default: "."]
+  -v, --verbose  Show details about the result of running command  [boolean] [default: false]
+  -h, --help     Show help  [boolean]
+```
+
+### push
+
+```sh
+$ githelp push --help
+```
+
+Help output:
+
+```
+githelp push
+
+For all repositories located in the source directory push commited changes to appropriate remote repositories
+
+Options:
+  --version      Show version number  [boolean]
+  -s, --source   The directory where the repositories for which you want to push commited changes are located  [string] [default: "."]
   -v, --verbose  Show details about the result of running command  [boolean] [default: false]
   -h, --help     Show help  [boolean]
 ```

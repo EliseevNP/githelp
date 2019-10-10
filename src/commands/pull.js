@@ -32,7 +32,7 @@ module.exports.handler = async argv => {
       try {
         console.log(`[INFO] Pulling for '${repositories[i]}' repository ...`);
 
-        const { stdout, stderr } = (await exec(`cd ${repositories[i]} && git pull`));
+        const { stdout, stderr } = (await exec(`cd ${repositories[i]} && git pull --quiet`));
 
         if (stderr) {
           console.log(`[ERROR] Pulling for '${repositories[i]}' repository failure${(argv.verbose) ? `\n${stderr}` : ''}`);
