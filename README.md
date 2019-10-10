@@ -20,6 +20,7 @@ githelp <command>
 Commands:
   githelp checkout <branch>  Switch branches in all repositories located in the source directory
   githelp clone              Clone all repositories available to you by access token into output directory
+  githelp pull               For all repositories located in the source directory changes from their remote repositories will be pulled
 
 Options:
   --version   Show version number  [boolean]
@@ -30,6 +31,7 @@ Options:
 
 * [checkout](#checkout)
 * [clone](#clone)
+* [pull](#pull)
 
 ### checkout
 
@@ -37,7 +39,7 @@ Options:
 $ githelp checkout --help
 ```
 
-Help output
+Help output:
 
 ```
 githelp checkout <branch>
@@ -84,6 +86,26 @@ Options:
   --visibility        Visibility level (now provide only gitlab visibility levels: public, internal or private)  [string] [choices: "public", "internal", "private"] [default: "private"]
   -h, --help          Show help  [boolean]
  ```
+
+ ### pull
+
+```sh
+$ githelp pull --help
+```
+
+Help output:
+
+```
+githelp pull
+
+For all repositories located in the source directory changes from their remote repositories will be pulled
+
+Options:
+  --version      Show version number  [boolean]
+  -s, --source   The directory where the repositories for which you want to pull changes are located  [string] [default: "."]
+  -v, --verbose  Show details about the result of running command  [boolean] [default: false]
+  -h, --help     Show help  [boolean]
+```
 
 ## License
 
