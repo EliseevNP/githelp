@@ -30,7 +30,7 @@ module.exports.handler = async argv => {
 
     await Promise.all(repositories.map(repository => new Promise(async resolve => {
       try {
-        const { stdout, stderr } = (await exec(`cd ${repository} && git add . --quiet`));
+        const { stdout, stderr } = (await exec(`cd ${repository} && git add .`));
 
         if (stderr) {
           console.log(`[ERROR] Adding changes for '${repository}' repository failure${(argv.verbose) ? `\n${stderr}` : ''}`);
