@@ -1,6 +1,6 @@
 {
   "name": "githelp",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "description": "CLI for performing routine operations with git",
   "main": "src/cli.js",
   "author": "Nikita Eliseev",
