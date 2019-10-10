@@ -18,6 +18,7 @@ Help output:
 githelp <command>
 
 Commands:
+  githelp add                Add changes to the index in all repositories located in the source directory
   githelp checkout <branch>  Switch branches in all repositories located in the source directory
   githelp clone              Clone all repositories available to you by access token into output directory
   githelp pull               For all repositories located in the source directory changes from their remote repositories will be pulled
@@ -29,9 +30,30 @@ Options:
 
 ## Available commands
 
+* [add](#add)
 * [checkout](#checkout)
 * [clone](#clone)
 * [pull](#pull)
+
+### add
+
+```sh
+$ githelp add --help
+```
+
+Help output:
+
+```
+githelp add
+
+Add changes to the index in all repositories located in the source directory
+
+Options:
+  --version      Show version number  [boolean]
+  -s, --source   The directory where the repositories are located in which you want to add changes to the index  [string] [default: "."]
+  -v, --verbose  Show details about the result of running command  [boolean] [default: false]
+  -h, --help     Show help  [boolean]
+```
 
 ### checkout
 
