@@ -35,7 +35,7 @@ module.exports.handler = async argv => {
 
         const currentBranch = await getCurrentBranch(repositories[i]);
 
-        const { stdout, stderr } = (await exec(`cd ${repositories[i]} && git push --set-upstream origin ${currentBranch} --quiet`));
+        let { stdout, stderr } = (await exec(`cd ${repositories[i]} && git push --set-upstream origin ${currentBranch} --quiet`));
 
         // TODO: Перенаправить поток вывода от remote из stderr в stdout (этот вывод возникает если пушить новую локальную ветку в удаленный репозиторий)
 
