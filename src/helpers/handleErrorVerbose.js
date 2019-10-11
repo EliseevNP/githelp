@@ -9,4 +9,8 @@ module.exports = err => {
   if (err.stdout) {
     console.log(err.stdout);
   }
+  if (err.isAxiosError) {
+    console.log(`  URL: ${err.config.url}`);
+    console.log(`  data: ${err.config.data}`);
+  }
 };
