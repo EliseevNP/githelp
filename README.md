@@ -22,8 +22,9 @@ githelp <command>
 Commands:
   githelp add                Add changes to the index in all repositories located in the source directory
   githelp checkout <branch>  Switch branches in all repositories located in the source directory
-  githelp clone              Clone all repositories available to you by access token into output directory
+  githelp clone              Clone all repositories available to you by access token to the output directory
   githelp commit             Commit changes to the index in all repositories located in the source directory
+  githelp merge-request      Create merge request in all repositories located in the source directory
   githelp pull               For all repositories located in the source directory changes from their remote repositories will be pulled
   githelp push               For all repositories located in the source directory push commited changes to appropriate remote repositories
 
@@ -38,6 +39,7 @@ Options:
 * [checkout](#checkout)
 * [clone](#clone)
 * [commit](#commit)
+* [merge-request](#merge-request)
 * [pull](#pull)
 * [push](#push)
 
@@ -136,6 +138,35 @@ Options:
   -m, --message  Commit message  [string] [required]
   -v, --verbose  Show details about the result of running command  [boolean] [default: false]
   -h, --help     Show help  [boolean]
+```
+
+### merge-request
+
+```sh
+$ githelp merge-request --help
+```
+
+Help output:
+
+```
+githelp merge-request
+
+Create merge request in all repositories located in the source directory
+
+Options:
+  --version           Show version number  [boolean]
+  -t, --access_token  Access token (now provide only gitlab access token)  [string] [required]
+  -s, --source        The directory where the repositories are located in which you want to create merge request  [string] [default: "."]
+  --api_url           API URL (now provide only gitlab API). Examples of correct API URL's:
+                        - https://gitlab.com/api/v4
+                        - https://gitlab.example.xyz/api/v4
+                        - gitlab.com
+                        - gitlab.example.xyz  [string] [default: "https://gitlab.com/api/v4"]
+  --source_branch     The source branch  [string] [required]
+  --target_branch     The target branch  [string] [required]
+  --title             Title of MR  [string] [required]
+  -v, --verbose       Show details about the result of running command  [boolean] [default: false]
+  -h, --help          Show help  [boolean]
 ```
 
 ### pull

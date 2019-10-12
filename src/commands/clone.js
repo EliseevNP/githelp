@@ -5,7 +5,7 @@ const handleErrorVerbose = require('../helpers/handleErrorVerbose');
 
 module.exports.command = 'clone';
 
-module.exports.description = 'Clone all repositories available to you by access token into output directory';
+module.exports.description = 'Clone all repositories available to you by access token to the output directory';
 
 module.exports.builder = yargs => {
   yargs

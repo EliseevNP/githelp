@@ -5,7 +5,7 @@ const handleErrorVerbose = require('../helpers/handleErrorVerbose');
 
 module.exports.command = 'merge-request';
 
-module.exports.description = 'Create merge request in all repositories located in source directory';
+module.exports.description = 'Create merge request in all repositories located in the source directory';
 
 module.exports.builder = yargs => {
   yargs
