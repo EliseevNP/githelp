@@ -35,15 +35,10 @@ module.exports.handler = async argv => {
 
         const currentBranch = await getCurrentBranch(pathsToRepositories[i]);
 
-        let { stdout, stderr } = (await exec(`cd ${pathsToRepositories[i]} && git push --set-upstream origin ${currentBranch} --quiet`));
+        const { stdout } = (await exec(`cd ${pathsToRepositories[i]} && git push --set-upstream origin ${currentBranch} --porcelain 2>/dev/null`));
 
-        // TODO: Перенаправить поток вывода от remote из stderr в stdout (этот вывод возникает если пушить новую локальную ветку в удаленный репозиторий)
-
-        // exclude lines stats with 'remote:' from stderr
-        stderr = stderr.split('\n').slice(0, -1).filter(logString => !logString.startsWith('remote:')).join('\n');
-
-        if (stderr) {
-          console.log(`[ERROR] Pushing for '${pathsToRepositories[i]}' repository failure${(argv.verbose) ? `\n${stderr}` : ''}`);
+        if (stdout[stdout.indexOf('\n') + 1] === '!') {
+          console.log(`[ERROR] Pushing for '${pathsToRepositories[i]}' repository failure${(argv.verbose) ? `\n${stdout}` : ''}`);
         } else {
           console.log(`[OK] Pushing for '${pathsToRepositories[i]}' repository ... ok${(argv.verbose) ? `\n${stdout}` : ''}`);
         }
