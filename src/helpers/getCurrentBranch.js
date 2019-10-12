@@ -1,7 +1,7 @@
 const exec = require('./exec');
 
 // Returns the name of current branch
-module.exports = async repository => (await exec(`cd ${repository} && git branch`)) // eslint-disable-line no-useless-escape
+module.exports = async repository => (await exec(`cd ${repository} && git branch`))
   .stdout
   .split('\n')
   .slice(0, -1)

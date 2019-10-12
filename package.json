@@ -9,7 +9,8 @@
     "githelp": "./src/cli.js"
   },
   "scripts": {
-    "eslint": "eslint ./ --fix"
+    "eslint": "eslint ./",
+    "eslint:fix": "eslint ./ --fix"
   },
   "keywords": [
     "git",

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-require('yargs')
+require('yargs') // eslint-disable-line no-unused-expressions
   .commandDir('commands')
   .locale('en')
   .wrap(null)
