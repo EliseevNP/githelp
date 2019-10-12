@@ -1,6 +1,6 @@
 const yargs = require('yargs');
 const exec = require('../helpers/exec');
-const getRepositories = require('../helpers/getRepositories');
+const getPathsToRepositories = require('../helpers/getPathsToRepositories');
 const handleErrorVerbose = require('../helpers/handleErrorVerbose');
 const getBranches = require('../helpers/getBranches');
 const getCurrentBranch = require('../helpers/getCurrentBranch');
@@ -33,39 +33,39 @@ module.exports.builder = yargs => {
 
 module.exports.handler = async argv => {
   try {
-    const repositories = await getRepositories(argv.source, argv.verbose);
+    const pathsToRepositories = await getPathsToRepositories(argv.source, argv.verbose);
 
-    await Promise.all(repositories.map(repository => new Promise(async resolve => {
+    await Promise.all(pathsToRepositories.map(repositoryPath => new Promise(async resolve => {
       try {
-        const currentBranch = await getCurrentBranch(repository);
+        const currentBranch = await getCurrentBranch(repositoryPath);
 
         if (currentBranch === argv.branch) {
-          console.log(`[OK] Skiping checkout for '${repository}' repository. Already on '${argv.branch}'`);
+          console.log(`[OK] Skiping checkout for '${repositoryPath}' repository. Already on '${argv.branch}'`);
           resolve();
 
           return;
         }
 
-        const isBranchExists = (await getBranches(repository)).includes(argv.branch);
+        const isBranchExists = (await getBranches(repositoryPath)).includes(argv.branch);
 
         if (!isBranchExists && !argv.b) {
-          console.log(`[ERROR] Checkout for '${repository}' repository failure. Branch '${argv.branch}' doesn't exists (maybe you need -b option?)`);
+          console.log(`[ERROR] Checkout for '${repositoryPath}' repository failure. Branch '${argv.branch}' doesn't exists (maybe you need -b option?)`);
           resolve();
 
           return;
         }
 
         if (!isBranchExists && argv.b) {
-          await exec(`cd ${repository} && git checkout -b ${argv.branch}`);
-          console.log(`[OK] Checkout for '${repository}' repository ... ok (new branch '${argv.branch}' was created)`);
+          await exec(`cd ${repositoryPath} && git checkout -b ${argv.branch}`);
+          console.log(`[OK] Checkout for '${repositoryPath}' repository ... ok (new branch '${argv.branch}' was created)`);
         } else {
-          await exec(`cd ${repository} && git checkout ${argv.branch}`);
-          console.log(`[OK] Checkout for '${repository}' repository ... ok`);
+          await exec(`cd ${repositoryPath} && git checkout ${argv.branch}`);
+          console.log(`[OK] Checkout for '${repositoryPath}' repository ... ok`);
         }
 
         resolve();
       } catch (err) {
-        console.log(`[ERROR] Checkout for '${repository}' repository failure`);
+        console.log(`[ERROR] Checkout for '${repositoryPath}' repository failure`);
         if (argv.verbose) {
           handleErrorVerbose(err);
         }

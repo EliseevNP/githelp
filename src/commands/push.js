@@ -1,6 +1,6 @@
 const yargs = require('yargs');
 const exec = require('../helpers/exec');
-const getRepositories = require('../helpers/getRepositories');
+const getPathsToRepositories = require('../helpers/getPathsToRepositories');
 const handleErrorVerbose = require('../helpers/handleErrorVerbose');
 const getCurrentBranch = require('../helpers/getCurrentBranch');
 
@@ -27,15 +27,15 @@ module.exports.builder = yargs => {
 
 module.exports.handler = async argv => {
   try {
-    const repositories = await getRepositories(argv.source, argv.verbose);
+    const pathsToRepositories = await getPathsToRepositories(argv.source, argv.verbose);
 
-    for (let i = 0; i < repositories.length; i++) {
+    for (let i = 0; i < pathsToRepositories.length; i++) {
       try {
-        console.log(`[INFO] Pushing for '${repositories[i]}' repository ...`);
+        console.log(`[INFO] Pushing for '${pathsToRepositories[i]}' repository ...`);
 
-        const currentBranch = await getCurrentBranch(repositories[i]);
+        const currentBranch = await getCurrentBranch(pathsToRepositories[i]);
 
-        let { stdout, stderr } = (await exec(`cd ${repositories[i]} && git push --set-upstream origin ${currentBranch} --quiet`));
+        let { stdout, stderr } = (await exec(`cd ${pathsToRepositories[i]} && git push --set-upstream origin ${currentBranch} --quiet`));
 
         // TODO: Перенаправить поток вывода от remote из stderr в stdout (этот вывод возникает если пушить новую локальную ветку в удаленный репозиторий)
 
@@ -43,12 +43,12 @@ module.exports.handler = async argv => {
         stderr = stderr.split('\n').slice(0, -1).filter(logString => !logString.startsWith('remote:')).join('\n');
 
         if (stderr) {
-          console.log(`[ERROR] Pushing for '${repositories[i]}' repository failure${(argv.verbose) ? `\n${stderr}` : ''}`);
+          console.log(`[ERROR] Pushing for '${pathsToRepositories[i]}' repository failure${(argv.verbose) ? `\n${stderr}` : ''}`);
         } else {
-          console.log(`[OK] Pushing for '${repositories[i]}' repository ... ok${(argv.verbose) ? `\n${stdout}` : ''}`);
+          console.log(`[OK] Pushing for '${pathsToRepositories[i]}' repository ... ok${(argv.verbose) ? `\n${stdout}` : ''}`);
         }
       } catch (err) {
-        console.log(`[ERROR] Pushing for '${repositories[i]}' repository failure`);
+        console.log(`[ERROR] Pushing for '${pathsToRepositories[i]}' repository failure`);
         if (argv.verbose) {
           handleErrorVerbose(err);
         }

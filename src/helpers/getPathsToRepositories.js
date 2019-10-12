@@ -8,5 +8,3 @@ module.exports = async (source, verbose) => {
     throw new Error(`An error occurred while trying to get an array of repositories${(verbose ? `\n  ${err}` : '')}`);
   }
 };
-
-// TODO: rename to 'getPathsToRepositories'

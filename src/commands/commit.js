@@ -1,6 +1,6 @@
 const yargs = require('yargs');
 const exec = require('../helpers/exec');
-const getRepositories = require('../helpers/getRepositories');
+const getPathsToRepositories = require('../helpers/getPathsToRepositories');
 const handleErrorVerbose = require('../helpers/handleErrorVerbose');
 const getCommitChangesCount = require('../helpers/getCommitChangesCount');
 const getMergeConfilctsCount = require('../helpers/getMergeConfilctsCount');
@@ -34,35 +34,35 @@ module.exports.builder = yargs => {
 
 module.exports.handler = async argv => {
   try {
-    const repositories = await getRepositories(argv.source, argv.verbose);
+    const pathsToRepositories = await getPathsToRepositories(argv.source, argv.verbose);
 
-    await Promise.all(repositories.map(repository => new Promise(async resolve => {
+    await Promise.all(pathsToRepositories.map(repositoryPath => new Promise(async resolve => {
       try {
-        if (await getMergeConfilctsCount(repository) !== 0) {
-          console.log(`[ERROR] Commiting changes for '${repository}' repository failure. Merge conflicts found`);
+        if (await getMergeConfilctsCount(repositoryPath) !== 0) {
+          console.log(`[ERROR] Commiting changes for '${repositoryPath}' repository failure. Merge conflicts found`);
           resolve();
 
           return;
         }
 
-        if (await getCommitChangesCount(repository) === 0) {
-          console.log(`[OK] Skiping commiting changes for '${repository}' repository. Files added to current commit not found`);
+        if (await getCommitChangesCount(repositoryPath) === 0) {
+          console.log(`[OK] Skiping commiting changes for '${repositoryPath}' repository. Files added to current commit not found`);
           resolve();
 
           return;
         }
 
-        const { stdout, stderr } = (await exec(`cd ${repository} && git commit -m "${argv.message}" --quiet`));
+        const { stdout, stderr } = (await exec(`cd ${repositoryPath} && git commit -m "${argv.message}" --quiet`));
 
         if (stderr) {
-          console.log(`[ERROR] Commiting changes for '${repository}' repository failure${(argv.verbose) ? `\n${stderr}` : ''}`);
+          console.log(`[ERROR] Commiting changes for '${repositoryPath}' repository failure${(argv.verbose) ? `\n${stderr}` : ''}`);
         } else {
-          console.log(`[OK] Commiting changes for '${repository}' repository ... ok${(argv.verbose) ? `\n${stdout}` : ''}`);
+          console.log(`[OK] Commiting changes for '${repositoryPath}' repository ... ok${(argv.verbose) ? `\n${stdout}` : ''}`);
         }
 
         resolve();
       } catch (err) {
-        console.log(`[ERROR] Commiting changes for '${repository}' repository failure`);
+        console.log(`[ERROR] Commiting changes for '${repositoryPath}' repository failure`);
         if (argv.verbose) {
           handleErrorVerbose(err);
         }

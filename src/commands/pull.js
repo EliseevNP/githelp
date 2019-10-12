@@ -1,6 +1,6 @@
 const yargs = require('yargs');
 const exec = require('../helpers/exec');
-const getRepositories = require('../helpers/getRepositories');
+const getPathsToRepositories = require('../helpers/getPathsToRepositories');
 const handleErrorVerbose = require('../helpers/handleErrorVerbose');
 
 module.exports.command = 'pull';
@@ -26,21 +26,21 @@ module.exports.builder = yargs => {
 
 module.exports.handler = async argv => {
   try {
-    const repositories = await getRepositories(argv.source, argv.verbose);
+    const pathsToRepositories = await getPathsToRepositories(argv.source, argv.verbose);
 
-    for (let i = 0; i < repositories.length; i++) {
+    for (let i = 0; i < pathsToRepositories.length; i++) {
       try {
-        console.log(`[INFO] Pulling for '${repositories[i]}' repository ...`);
+        console.log(`[INFO] Pulling for '${pathsToRepositories[i]}' repository ...`);
 
-        const { stdout, stderr } = (await exec(`cd ${repositories[i]} && git pull --quiet`));
+        const { stdout, stderr } = (await exec(`cd ${pathsToRepositories[i]} && git pull --quiet`));
 
         if (stderr) {
-          console.log(`[ERROR] Pulling for '${repositories[i]}' repository failure${(argv.verbose) ? `\n${stderr}` : ''}`);
+          console.log(`[ERROR] Pulling for '${pathsToRepositories[i]}' repository failure${(argv.verbose) ? `\n${stderr}` : ''}`);
         } else {
-          console.log(`[OK] Pulling for '${repositories[i]}' repository ... ok${(argv.verbose) ? `\n${stdout}` : ''}`);
+          console.log(`[OK] Pulling for '${pathsToRepositories[i]}' repository ... ok${(argv.verbose) ? `\n${stdout}` : ''}`);
         }
       } catch (err) {
-        console.log(`[ERROR] Pulling for '${repositories[i]}' repository failure`);
+        console.log(`[ERROR] Pulling for '${pathsToRepositories[i]}' repository failure`);
         if (argv.verbose) {
           handleErrorVerbose(err);
         }

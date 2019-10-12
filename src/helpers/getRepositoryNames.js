@@ -1,12 +1,12 @@
 const exec = require('./exec');
-const getRepositories = require('./getRepositories');
+const getPathsToRepositories = require('./getPathsToRepositories');
 
-// Returns an array containing the objects with name and namespace of the repositories relative to the source directory
+// Returns an array containing the objects with name and namespace of the repository relative to the source directory
 module.exports = async (source, verbose) => {
   try {
-    const repositories = await getRepositories(source, verbose);
+    const pathsToRepositories = await getPathsToRepositories(source, verbose);
 
-    const result = await Promise.all(repositories.map(repositoryPath => new Promise(async (resolve, reject) => {
+    const result = await Promise.all(pathsToRepositories.map(repositoryPath => new Promise(async (resolve, reject) => {
       try {
         let name = (await exec(`cd ${repositoryPath} && git remote -v`))
           .stdout
