@@ -110,7 +110,7 @@ module.exports.handler = async argv => {
     const urls = [];
 
     if (argv.group) {
-      urls.push(`${argv.api_url}/groups/${encodeURI(argv.group)}/projects?access_token=${argv.access_token}&visibility=${argv.visibility}&simple=true`);
+      urls.push(`${argv.api_url}/groups/${encodeURIComponent(argv.group)}/projects?access_token=${argv.access_token}&visibility=${argv.visibility}&simple=true`);
     }
 
     if (argv.user) {

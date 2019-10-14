@@ -63,7 +63,7 @@ module.exports.handler = async argv => {
 
     await Promise.all(repositories.map(repository => new Promise(async resolve => {
       try {
-        await axios.post(`${argv.api_url}/projects/${encodeURI(`${repository.namespace}/${repository.name}`)}/merge_requests?access_token=${argv.access_token}`, {
+        await axios.post(`${argv.api_url}/projects/${encodeURIComponent(`${repository.namespace}/${repository.name}`)}/merge_requests?access_token=${argv.access_token}`, {
           title: argv.title,
           source_branch: argv.source_branch,
           target_branch: argv.target_branch,
