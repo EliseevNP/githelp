@@ -41,7 +41,7 @@ module.exports.builder = yargs => {
     })
     .option('target_branch', {
       type: 'string',
-      demandOption: 'To create merge request you need specify source branch (--target_branch)',
+      demandOption: 'To create merge request you need specify target branch (--target_branch)',
       description: 'The target branch',
     })
     .option('title', {
