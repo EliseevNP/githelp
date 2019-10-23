@@ -54,7 +54,17 @@ module.exports.builder = yargs => {
       default: false,
       alias: 'verbose',
       description: 'Show details about the result of running command',
-    });
+    })
+    .option('remove_source_branch', {
+      type: 'boolean',
+      default: false,
+      description: 'Flag indicating if a merge request should remove the source branch when merging',
+    })
+    .option('squash', {
+      type: 'boolean',
+      default: false,
+      description: 'Squash commits into a single commit when merging',
+    })
 };
 
 module.exports.handler = async argv => {
@@ -67,6 +77,8 @@ module.exports.handler = async argv => {
           title: argv.title,
           source_branch: argv.source_branch,
           target_branch: argv.target_branch,
+          remove_source_branch: argv.remove_source_branch,
+          squash: argv.squash,
         }, {
           validateStatus: status => status === 201,
         });

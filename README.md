@@ -154,19 +154,21 @@ githelp merge-request
 Create merge request in all repositories located in the source directory
 
 Options:
-  --version           Show version number  [boolean]
-  -t, --access_token  Access token (now provide only gitlab access token)  [string] [required]
-  -s, --source        The directory where the repositories are located in which you want to create merge request  [string] [default: "."]
-  --api_url           API URL (now provide only gitlab API). Examples of correct API URL's:
-                        - https://gitlab.com/api/v4
-                        - https://gitlab.example.xyz/api/v4
-                        - gitlab.com
-                        - gitlab.example.xyz  [string] [default: "https://gitlab.com/api/v4"]
-  --source_branch     The source branch  [string] [required]
-  --target_branch     The target branch  [string] [required]
-  --title             Title of MR  [string] [required]
-  -v, --verbose       Show details about the result of running command  [boolean] [default: false]
-  -h, --help          Show help  [boolean]
+  --version               Show version number  [boolean]
+  -t, --access_token      Access token (now provide only gitlab access token)  [string] [required]
+  -s, --source            The directory where the repositories are located in which you want to create merge request  [string] [default: "."]
+  --api_url               API URL (now provide only gitlab API). Examples of correct API URL's:
+                            - https://gitlab.com/api/v4
+                            - https://gitlab.example.xyz/api/v4
+                            - gitlab.com
+                            - gitlab.example.xyz  [string] [default: "https://gitlab.com/api/v4"]
+  --source_branch         The source branch  [string] [required]
+  --target_branch         The target branch  [string] [required]
+  --title                 Title of MR  [string] [required]
+  -v, --verbose           Show details about the result of running command  [boolean] [default: false]
+  --remove_source_branch  Flag indicating if a merge request should remove the source branch when merging  [boolean] [default: false]
+  --squash                Squash commits into a single commit when merging  [boolean] [default: false]
+  -h, --help              Show help  [boolean]
 ```
 
 ### pull
