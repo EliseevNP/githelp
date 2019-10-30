@@ -3,6 +3,7 @@ const exec = require('../helpers/exec');
 const getPathsToRepositories = require('../helpers/getPathsToRepositories');
 const handleErrorVerbose = require('../helpers/handleErrorVerbose');
 const getMergeConfilctsCount = require('../helpers/getMergeConfilctsCount');
+const options = require('../options');
 
 module.exports.command = 'add';
 
@@ -10,19 +11,9 @@ module.exports.description = 'Add changes to the index in all repositories locat
 
 module.exports.builder = yargs => {
   yargs
-    .option('s', {
-      type: 'string',
-      default: '.',
-      alias: 'source',
-      description: 'The directory where the repositories are located in which you want to add changes to the index',
-      coerce: arg => ((arg[arg.length - 1] === '/') ? arg.slice(0, -1) : arg),
-    })
-    .option('v', {
-      type: 'boolean',
-      default: false,
-      alias: 'verbose',
-      description: 'Show details about the result of running command',
-    });
+    .option(...options.verbose)
+    .option(...options.source)
+    .example('\'$ $0 add\'', 'Add changes to the index');
 };
 
 module.exports.handler = async argv => {

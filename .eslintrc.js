@@ -8,6 +8,6 @@ module.exports = {
     'no-await-in-loop': 'off',
     'arrow-parens': ['error', 'as-needed'],
     'arrow-body-style': ['error', 'as-needed'],
-    // 'max-len': 'off',
+    'no-return-await': 'off',
   },
 };
