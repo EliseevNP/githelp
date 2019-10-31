@@ -9,6 +9,5 @@ module.exports = {
     'no-async-promise-executor': 'off',
     'arrow-parens': ['error', 'as-needed'],
     'arrow-body-style': ['error', 'as-needed'],
-    'object-curly-newline': ['error', 'always'],
   },
 };
