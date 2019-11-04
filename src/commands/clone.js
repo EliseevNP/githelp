@@ -105,6 +105,7 @@ module.exports.handler = async argv => {
     let repositories;
 
     try {
+      // eslint-disable-next-line max-len
       repositories = await getRepositoriesList(urls, argv.all, argv.page, argv.per_page, argv.output);
     } catch (err) {
       console.log('[ERROR] An error occurred while trying to get a list of repositories');
