@@ -10,7 +10,8 @@
   },
   "scripts": {
     "eslint": "eslint ./",
-    "eslint:fix": "eslint ./ --fix"
+    "eslint:fix": "eslint ./ --fix",
+    "docs": "cli-docs-generator --cli=./src/cli.js --pretty_cli_name=githelp -d 'CLI for performing routine operations with git'"
   },
   "keywords": [
     "git",
@@ -30,6 +31,7 @@
   },
   "devDependencies": {
     "@bifot/eslint-config": "^1.0.2",
+    "cli-docs-generator": "^1.0.3",
     "eslint": "^6.5.1",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.18.2"

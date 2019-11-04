@@ -1,7 +1,6 @@
 const yargs = require('yargs');
-const axios = require('axios');
-const exec = require('../helpers/exec');
-const handleErrorVerbose = require('../helpers/handleErrorVerbose');
+const options = require('../options');
+const { exec, getRepositoriesList, handleErrorVerbose } = require('../helpers');
 
 module.exports.command = 'clone';
 
@@ -9,30 +8,15 @@ module.exports.description = 'Clone all repositories available to you by access 
 
 module.exports.builder = yargs => {
   yargs
-    .option('t', {
-      type: 'string',
-      demandOption: 'Please specify access token for using \'clone\' command (-t, --access_token)',
-      alias: 'access_token',
-      description: 'Access token (now provide only gitlab access token)',
-    })
+    .option(...options.verbose)
+    .option(...options.access_token)
+    .option(...options.api_url)
     .option('o', {
       type: 'string',
       default: './output',
       alias: 'output',
       description: 'Output directory',
       coerce: arg => ((arg[arg.length - 1] === '/') ? arg.slice(0, -1) : arg),
-    })
-    .option('api_url', {
-      type: 'string',
-      default: 'https://gitlab.com/api/v4',
-      description: 'API URL (now provide only gitlab API). Examples of correct API URL\'s:\n  - https://gitlab.com/api/v4\n  - https://gitlab.example.xyz/api/v4\n  - gitlab.com \n  - gitlab.example.xyz',
-      coerce: arg => {
-        if (arg.match(/https:\/\/gitlab\.([\x20-\x7F]*)\/api\/v4/)) { // [\x20-\x7F] - ASCII symbols
-          return arg;
-        }
-
-        return `https://${arg}/api/v4`;
-      },
     })
     .option('p', {
       type: 'number',
@@ -91,18 +75,13 @@ module.exports.builder = yargs => {
       alias: 'force',
       description: 'Folders located in the output directory and having the same names as the cloned repositories will be deleted before cloning',
     })
-    .option('v', {
-      type: 'boolean',
-      default: false,
-      alias: 'verbose',
-      description: 'Show details about the result of running command',
-    })
     .option('visibility', {
       type: 'string',
       default: 'private',
       choices: ['public', 'internal', 'private'],
       description: 'Visibility level (now provide only gitlab visibility levels: public, internal or private)',
-    });
+    })
+    .example('\'$ $0 clone --user=eliseevNP -t 3FQtg-vF8cNjkSr2X9vc\'', 'Clone all private repositories belongs to the \'eliseevNP\' user');
 };
 
 module.exports.handler = async argv => {
@@ -121,49 +100,16 @@ module.exports.handler = async argv => {
       urls.push(`${argv.api_url}/projects?access_token=${argv.access_token}&visibility=${argv.visibility}&simple=true`);
     }
 
-    let repositories = [];
-    let response;
-    const validateStatus = status => status === 200;
-    const mapRepositories = repositoryInfo => ({
-      url: repositoryInfo.ssh_url_to_repo,
-      output: `${argv.output}/${repositoryInfo.path_with_namespace}`,
-      path: repositoryInfo.path_with_namespace,
-    });
+    console.log('Getting list of available repositories ...');
+
+    let repositories;
 
     try {
-      console.log('Getting list of available repositories ...');
-
-      const getRepositositoriesList = async baseURL => {
-        let url = baseURL;
-
-        if (argv.all) {
-          const perPage = 100;
-          let page = 1;
-
-          url += `&page=${page}&per_page=${perPage}`;
-
-          do {
-            response = await axios.get(url, { validateStatus });
-            repositories = repositories.concat(response.data.map(mapRepositories));
-            url = url.replace(`&page=${page}`, `&page=${++page}`);
-          } while (response.data.length !== 0);
-        } else {
-          if (argv.page) {
-            url += `&page=${argv.page}`;
-          }
-
-          if (argv.per_page) {
-            url += `&per_page=${argv.per_page}`;
-          }
-
-          response = await axios.get(url, { validateStatus });
-          repositories = repositories.concat(response.data.map(mapRepositories));
-        }
-      };
-
-      await Promise.all(urls.map(getRepositositoriesList));
+      // eslint-disable-next-line max-len
+      repositories = await getRepositoriesList(urls, argv.all, argv.page, argv.per_page, argv.output);
     } catch (err) {
       console.log('[ERROR] An error occurred while trying to get a list of repositories');
+
       if (argv.verbose) {
         handleErrorVerbose(err);
       }
@@ -204,6 +150,6 @@ module.exports.handler = async argv => {
     })));
   } catch (err) {
     yargs.showHelp();
-    console.log(`\n${err.message}`);
+    console.log(`\n${argv.verbose ? err : err.message}`);
   }
 };

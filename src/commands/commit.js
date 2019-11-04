@@ -1,9 +1,12 @@
 const yargs = require('yargs');
-const exec = require('../helpers/exec');
-const getPathsToRepositories = require('../helpers/getPathsToRepositories');
-const handleErrorVerbose = require('../helpers/handleErrorVerbose');
-const getCommitChangesCount = require('../helpers/getCommitChangesCount');
-const getMergeConfilctsCount = require('../helpers/getMergeConfilctsCount');
+const options = require('../options');
+const {
+  exec,
+  getPathsToRepositories,
+  handleErrorVerbose,
+  getCommitChangesCount,
+  getMergeConfilctsCount,
+} = require('../helpers');
 
 module.exports.command = 'commit';
 
@@ -11,25 +14,15 @@ module.exports.description = 'Commit changes to the index in all repositories lo
 
 module.exports.builder = yargs => {
   yargs
-    .option('s', {
-      type: 'string',
-      default: '.',
-      alias: 'source',
-      description: 'The directory where the repositories are located in which you want to commit changes',
-      coerce: arg => ((arg[arg.length - 1] === '/') ? arg.slice(0, -1) : arg),
-    })
+    .option(...options.verbose)
+    .option(...options.source)
     .option('m', {
       type: 'string',
       demandOption: 'You need specify commit message (-m, --message)',
       alias: 'message',
       description: 'Commit message',
     })
-    .option('v', {
-      type: 'boolean',
-      default: false,
-      alias: 'verbose',
-      description: 'Show details about the result of running command',
-    });
+    .example('\'$ $0 commit -m message\'', 'Commit changes with the specified message');
 };
 
 module.exports.handler = async argv => {
@@ -71,6 +64,6 @@ module.exports.handler = async argv => {
     })));
   } catch (err) {
     yargs.showHelp();
-    console.log(`\n${err.message}`);
+    console.log(`\n${argv.verbose ? err : err.message}`);
   }
 };

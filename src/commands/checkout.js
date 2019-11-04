@@ -1,9 +1,13 @@
 const yargs = require('yargs');
-const exec = require('../helpers/exec');
-const getPathsToRepositories = require('../helpers/getPathsToRepositories');
-const handleErrorVerbose = require('../helpers/handleErrorVerbose');
-const getBranches = require('../helpers/getBranches');
-const getCurrentBranch = require('../helpers/getCurrentBranch');
+const {
+  exec,
+  getPathsToRepositories,
+  handleErrorVerbose,
+  getBranches,
+  getCurrentBranch,
+} = require('../helpers');
+
+const options = require('../options');
 
 module.exports.command = 'checkout <branch>';
 
@@ -11,24 +15,14 @@ module.exports.description = 'Switch branches in all repositories located in the
 
 module.exports.builder = yargs => {
   yargs
-    .option('s', {
-      type: 'string',
-      default: '.',
-      alias: 'source',
-      description: 'The directory where the repositories are located in which to switch branches',
-      coerce: arg => ((arg[arg.length - 1] === '/') ? arg.slice(0, -1) : arg),
-    })
+    .option(...options.verbose)
+    .option(...options.source)
     .option('b', {
       type: 'boolean',
       default: false,
       description: 'Apply -b flag to the \'git checkout\' command if specified <branch> is not exists',
     })
-    .option('v', {
-      type: 'boolean',
-      default: false,
-      alias: 'verbose',
-      description: 'Show details about the result of running command',
-    });
+    .example('\'$ $0 checkout staging -b\'', 'Switch branch to staging (if staging is not exists, it will be created)');
 };
 
 module.exports.handler = async argv => {
@@ -74,6 +68,6 @@ module.exports.handler = async argv => {
     })));
   } catch (err) {
     yargs.showHelp();
-    console.log(`\n${err.message}`);
+    console.log(`\n${argv.verbose ? err : err.message}`);
   }
 };

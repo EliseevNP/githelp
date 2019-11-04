@@ -1,7 +1,6 @@
 const yargs = require('yargs');
-const exec = require('../helpers/exec');
-const getPathsToRepositories = require('../helpers/getPathsToRepositories');
-const handleErrorVerbose = require('../helpers/handleErrorVerbose');
+const options = require('../options');
+const { exec, getPathsToRepositories, handleErrorVerbose } = require('../helpers');
 
 module.exports.command = 'pull';
 
@@ -9,19 +8,9 @@ module.exports.description = 'For all repositories located in the source directo
 
 module.exports.builder = yargs => {
   yargs
-    .option('s', {
-      type: 'string',
-      default: '.',
-      alias: 'source',
-      description: 'The directory where the repositories for which you want to pull changes are located',
-      coerce: arg => ((arg[arg.length - 1] === '/') ? arg.slice(0, -1) : arg),
-    })
-    .option('v', {
-      type: 'boolean',
-      default: false,
-      alias: 'verbose',
-      description: 'Show details about the result of running command',
-    });
+    .option(...options.verbose)
+    .option(...options.source)
+    .example('\'$ $0 pull\'', 'Pull changes');
 };
 
 module.exports.handler = async argv => {

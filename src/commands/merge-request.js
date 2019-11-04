@@ -1,7 +1,7 @@
 const yargs = require('yargs');
 const axios = require('axios');
-const getRepositoryNames = require('../helpers/getRepositoryNames');
-const handleErrorVerbose = require('../helpers/handleErrorVerbose');
+const { getRepositoryNames, handleErrorVerbose } = require('../helpers');
+const options = require('../options');
 
 module.exports.command = 'merge-request';
 
@@ -9,31 +9,10 @@ module.exports.description = 'Create merge request in all repositories located i
 
 module.exports.builder = yargs => {
   yargs
-    .option('t', {
-      type: 'string',
-      demandOption: 'Please specify access token for using \'merge-request\' command (-t, --access_token)',
-      alias: 'access_token',
-      description: 'Access token (now provide only gitlab access token)',
-    })
-    .option('s', {
-      type: 'string',
-      default: '.',
-      alias: 'source',
-      description: 'The directory where the repositories are located in which you want to create merge request',
-      coerce: arg => ((arg[arg.length - 1] === '/') ? arg.slice(0, -1) : arg),
-    })
-    .option('api_url', {
-      type: 'string',
-      default: 'https://gitlab.com/api/v4',
-      description: 'API URL (now provide only gitlab API). Examples of correct API URL\'s:\n  - https://gitlab.com/api/v4\n  - https://gitlab.example.xyz/api/v4\n  - gitlab.com \n  - gitlab.example.xyz',
-      coerce: arg => {
-        if (arg.match(/https:\/\/gitlab\.([\x20-\x7F]*)\/api\/v4/)) { // [\x20-\x7F] - ASCII symbols
-          return arg;
-        }
-
-        return `https://${arg}/api/v4`;
-      },
-    })
+    .option(...options.verbose)
+    .option(...options.access_token)
+    .option(...options.source)
+    .option(...options.api_url)
     .option('source_branch', {
       type: 'string',
       demandOption: 'To create merge request you need specify source branch (--source_branch)',
@@ -49,22 +28,17 @@ module.exports.builder = yargs => {
       demandOption: 'To create merge request you need specify title (--title)',
       description: 'Title of MR',
     })
-    .option('v', {
-      type: 'boolean',
-      default: false,
-      alias: 'verbose',
-      description: 'Show details about the result of running command',
-    })
     .option('remove_source_branch', {
       type: 'boolean',
-      default: false,
+      default: true,
       description: 'Flag indicating if a merge request should remove the source branch when merging',
     })
     .option('squash', {
       type: 'boolean',
-      default: false,
+      default: true,
       description: 'Squash commits into a single commit when merging',
     })
+    .example('\'$ $0 merge-request --target_branch=staging --source_branch=hot-fix --title="WIP: hot fix" -t 3FQtg-vF8cNjkSr2X9vc\'', 'Create MR from hot-fix to staging with specified title');
 };
 
 module.exports.handler = async argv => {
@@ -98,6 +72,6 @@ module.exports.handler = async argv => {
     })));
   } catch (err) {
     yargs.showHelp();
-    console.log(`\n${err.message}`);
+    console.log(`\n${argv.verbose ? err : err.message}`);
   }
 };
