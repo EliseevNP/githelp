@@ -45,6 +45,10 @@ Options:
 
 ### add
 
+```sh
+$ githelp add --help
+```
+
 Help output:
 
 ```
@@ -63,6 +67,10 @@ Examples:
 ```
 
 ### checkout
+
+```sh
+$ githelp checkout --help
+```
 
 Help output:
 
@@ -83,6 +91,10 @@ Examples:
 ```
 
 ### clone
+
+```sh
+$ githelp clone --help
+```
 
 Help output:
 
@@ -116,6 +128,10 @@ Examples:
 
 ### commit
 
+```sh
+$ githelp commit --help
+```
+
 Help output:
 
 ```
@@ -135,6 +151,10 @@ Examples:
 ```
 
 ### merge-request
+
+```sh
+$ githelp merge-request --help
+```
 
 Help output:
 
@@ -166,6 +186,10 @@ Examples:
 
 ### pull
 
+```sh
+$ githelp pull --help
+```
+
 Help output:
 
 ```
@@ -184,6 +208,10 @@ Examples:
 ```
 
 ### push
+
+```sh
+$ githelp push --help
+```
 
 Help output:
 
