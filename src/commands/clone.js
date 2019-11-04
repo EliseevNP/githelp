@@ -1,8 +1,6 @@
 const yargs = require('yargs');
-const exec = require('../helpers/exec');
-const getRepositoriesList = require('../helpers/getRepositoriesList');
-const handleErrorVerbose = require('../helpers/handleErrorVerbose');
 const options = require('../options');
+const { exec, getRepositoriesList, handleErrorVerbose } = require('../helpers');
 
 module.exports.command = 'clone';
 

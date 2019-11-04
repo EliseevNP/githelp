@@ -1,10 +1,12 @@
 const yargs = require('yargs');
-const exec = require('../helpers/exec');
-const getPathsToRepositories = require('../helpers/getPathsToRepositories');
-const handleErrorVerbose = require('../helpers/handleErrorVerbose');
-const getCommitChangesCount = require('../helpers/getCommitChangesCount');
-const getMergeConfilctsCount = require('../helpers/getMergeConfilctsCount');
 const options = require('../options');
+const {
+  exec,
+  getPathsToRepositories,
+  handleErrorVerbose,
+  getCommitChangesCount,
+  getMergeConfilctsCount,
+} = require('../helpers');
 
 module.exports.command = 'commit';
 

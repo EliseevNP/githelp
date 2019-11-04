@@ -1,9 +1,11 @@
 const yargs = require('yargs');
-const exec = require('../helpers/exec');
-const getPathsToRepositories = require('../helpers/getPathsToRepositories');
-const handleErrorVerbose = require('../helpers/handleErrorVerbose');
-const getMergeConfilctsCount = require('../helpers/getMergeConfilctsCount');
 const options = require('../options');
+const {
+  exec,
+  getPathsToRepositories,
+  handleErrorVerbose,
+  getMergeConfilctsCount,
+} = require('../helpers');
 
 module.exports.command = 'add';
 

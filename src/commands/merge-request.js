@@ -1,7 +1,6 @@
 const yargs = require('yargs');
 const axios = require('axios');
-const getRepositoryNames = require('../helpers/getRepositoryNames');
-const handleErrorVerbose = require('../helpers/handleErrorVerbose');
+const { getRepositoryNames, handleErrorVerbose } = require('../helpers');
 const options = require('../options');
 
 module.exports.command = 'merge-request';

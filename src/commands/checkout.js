@@ -1,9 +1,12 @@
 const yargs = require('yargs');
-const exec = require('../helpers/exec');
-const getPathsToRepositories = require('../helpers/getPathsToRepositories');
-const handleErrorVerbose = require('../helpers/handleErrorVerbose');
-const getBranches = require('../helpers/getBranches');
-const getCurrentBranch = require('../helpers/getCurrentBranch');
+const {
+  exec,
+  getPathsToRepositories,
+  handleErrorVerbose,
+  getBranches,
+  getCurrentBranch,
+} = require('../helpers');
+
 const options = require('../options');
 
 module.exports.command = 'checkout <branch>';
