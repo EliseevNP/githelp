@@ -72,6 +72,6 @@ module.exports.handler = async argv => {
     })));
   } catch (err) {
     yargs.showHelp();
-    console.log(`\n${err.message}`);
+    console.log(`\n${argv.verbose ? err : err.message}`);
   }
 };
