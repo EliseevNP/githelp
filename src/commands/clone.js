@@ -1,6 +1,8 @@
 const yargs = require('yargs');
 const options = require('../options');
-const { exec, getRepositoriesList, handleErrorVerbose } = require('../helpers');
+const {
+  exec, getRepositoriesList, handleErrorVerbose, getGroupUrls,
+} = require('../helpers');
 
 module.exports.command = 'clone';
 
@@ -89,7 +91,7 @@ module.exports.handler = async argv => {
     const urls = [];
 
     if (argv.group) {
-      urls.push(`${argv.api_url}/groups/${encodeURIComponent(argv.group)}/projects?access_token=${argv.access_token}&visibility=${argv.visibility}&simple=true`);
+      urls.push(...await getGroupUrls(argv));
     }
 
     if (argv.user) {

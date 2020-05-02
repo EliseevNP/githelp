@@ -3,7 +3,7 @@
 const axios = require('axios');
 
 module.exports = async (urls, all, page, perPage, output) => {
-  let repositories = [];
+  const repositories = [];
 
   const validateStatus = status => status === 200;
 
@@ -29,13 +29,13 @@ module.exports = async (urls, all, page, perPage, output) => {
 
   const getRepositoriesList = async baseURL => {
     if (all) {
-      repositories = [...repositories, ...(await getAllRepositories(baseURL))];
+      repositories.push(...(await getAllRepositories(baseURL)));
     } else {
       const url = `${baseURL}&page=${page}&per_page=${perPage}`;
 
       const response = await axios.get(url, { validateStatus });
 
-      repositories = [...repositories, ...response.data.map(mapRepositories)];
+      repositories.push(...response.data.map(mapRepositories));
     }
   };
 
